@@ -15,3 +15,8 @@ variable "username"{
   type = "list"
   default = ["user1", "user2", "user3"]
 }
+variable "rolename" {
+  description = "Create IAM roles"
+  type = "list"
+  default = ["Developer", "BSA", "QA"]
+}

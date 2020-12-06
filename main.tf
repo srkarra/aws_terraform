@@ -1,10 +1,11 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 2.70"
-#     }
-#   }
+ terraform {
+   required_providers {
+     aws = {
+       source  = "hashicorp/aws"
+       version = "~> 2.70"
+     }
+   }
+}
 provider "aws" {
   region     = var.aws_region
   access_key = var.aws_access_key
@@ -17,7 +18,7 @@ resource "aws_instance" "my-first-server"{
     instance_type = "t2.micro"
     tags = {
         Name = "first-instance"
-    }  
+    }
 }
 
 # Create S3 bucket 
@@ -29,6 +30,7 @@ resource "aws_s3_bucket" "example-tf-bucket-23" {
   }
 }
 
+#Create a VPC and subnet
 resource "aws_vpc" "test-vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
@@ -43,3 +45,20 @@ resource "aws_subnet" "vpc-subnet-1" {
     Name = "test environment subnet"
   }
 }
+
+# Create a lambda function
+resource "aws_lambda_function" "example" {
+  function_name = "ServerlessLambdaTerraform"
+  s3_bucket = "lambdafunction-terraform123"
+  s3_key    = "v1.0.0/lambda_terraform.zip"
+  handler = "main.handler"
+  runtime = "nodejs10.x"
+  role = aws_iam_role.lambda_exec.arn
+}
+resource "aws_iam_role" "lambda_exec" {
+  name = "lambda_user"
+
+  assume_role_policy = file("policies.json")
+}
+
+

@@ -11,3 +11,5 @@ Once the output of terraform plan looks good, running `terraform` apply comamnd 
 When you run apply command, it create a `.tfstate` file and `.tfstate.backup` files in consecutive runs which stores the configuration of your entire infrastructure and you are supposed to store this securely like in an S3 bucket which can be retrived and used by your teams when needed.
 We do not share these files on git because, 
 Things to learn - Terraform blue green deployment, store the statefile in S3 bucket, pull the state file from the bucket as backend service and run and udpate it. 
+
+Created S3 buckey from CLI using the command `aws s3api create-bucket --bucket name-of-your-bucket --region your-region`
