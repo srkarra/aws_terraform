@@ -1,4 +1,11 @@
  terraform {
+   backend "s3" {
+     encrypt = "true"
+     bucket = "terra-form-test-aws"
+     key = "example/terraform.tfstate"
+     region = "us-east-2"
+     dynamodb_table = "Terraform_StateFile_Locking_Table"
+  }
    required_providers {
      aws = {
        source  = "hashicorp/aws"
@@ -60,5 +67,18 @@ resource "aws_iam_role" "lambda_exec" {
 
   assume_role_policy = file("policies.json")
 }
-
-
+#Create DynamoDB table to enable locking on the tf state file
+resource "aws_dynamodb_table" "dynamo-terraform-state-lock" {
+  name = "Terraform_StateFile_Locking_Table"
+  hash_key = "LockID"
+  read_capacity = 5
+  write_capacity = 5
+ 
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+  tags = {
+    Name = "DynamoDB Terraform State Lock Table"
+  }
+  }
